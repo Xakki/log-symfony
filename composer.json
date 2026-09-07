@@ -1,0 +1,54 @@
+{
+  "name": "xakki/log-symfony",
+  "version": "0.1.0",
+  "description": "Symfony/Monolog log enrichment, redaction and formatters",
+  "type": "library",
+  "tag": "logger",
+  "minimum-stability": "stable",
+  "license": "Apache-2.0",
+  "require": {
+    "php": "^8.4",
+    "psr/log": "^3.0",
+    "ext-mbstring": "*"
+  },
+  "require-dev": {
+    "ext-sockets": "*",
+    "monolog/monolog": "^3.0",
+    "phpstan/phpstan": "*",
+    "slevomat/coding-standard": "*",
+    "phpunit/phpunit": "*",
+    "squizlabs/php_codesniffer": "*"
+  },
+  "suggest": {
+    "monolog/monolog": "required only for Processor\\ContextEnrichProcessor, Processor\\ExtraProcessor, Processor\\RemoteIpProcessor and Formatters\\* — Logger\\EnrichingLogger needs nothing but psr/log",
+    "symfony/monolog-bundle": "wire the processor/formatters via monolog.yaml",
+    "doctrine/dbal": "SQL query logging middleware — planned",
+    "symfony/messenger": "worker heartbeat + per-message request_id reset — planned"
+  },
+  "autoload": {
+    "files": [
+      "src/const.php"
+    ],
+    "psr-4": {
+      "Xakki\\LogSymfony\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Xakki\\LogSymfonyTests\\": "tests/"
+    }
+  },
+  "config": {
+    "preferred-install": "dist",
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "scripts": {
+    "phpstan": "XDEBUG_MODE=off vendor/bin/phpstan analyse --memory-limit 1G -v",
+    "phpstan-clean": "XDEBUG_MODE=off vendor/bin/phpstan clear-result-cache",
+    "cs-check": "XDEBUG_MODE=off vendor/bin/phpcs -sp --colors",
+    "cs-fix": "XDEBUG_MODE=off vendor/bin/phpcbf -p",
+    "phpunit": "XDEBUG_MODE=off vendor/bin/phpunit -c phpunit.xml --no-coverage"
+  }
+}
