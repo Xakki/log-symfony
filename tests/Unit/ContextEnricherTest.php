@@ -1,19 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace Xakki\LogSymfonyTests\Unit;
+namespace Xakki\Log\Symfony\Tests\Unit;
 
 use Monolog\Handler\TestHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\LogRecord;
 use PHPUnit\Framework\TestCase;
-use Xakki\LogSymfony\ContextEnricher;
-use Xakki\LogSymfony\FileTrace;
-use Xakki\LogSymfony\LoggerConfig;
-use Xakki\LogSymfony\Processor\ContextEnrichProcessor;
-use Xakki\LogSymfony\Processor\ExtraProcessor;
-use Xakki\LogSymfony\Redactor;
-use Xakki\LogSymfony\RequestId;
+use Xakki\Log\Symfony\ContextEnricher;
+use Xakki\Log\Symfony\FileTrace;
+use Xakki\Log\Symfony\LoggerConfig;
+use Xakki\Log\Symfony\Processor\ContextEnrichProcessor;
+use Xakki\Log\Symfony\Processor\ExtraProcessor;
+use Xakki\Log\Symfony\Redactor;
+use Xakki\Log\Symfony\RequestId;
 
 /**
  * Ported from LaraLog's tests/Unit/LogManagerTest.php. LaraLog booted a full Laravel app and

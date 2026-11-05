@@ -1,20 +1,20 @@
 <?php declare(strict_types=1);
 
-namespace Xakki\LogSymfonyTests\Unit;
+namespace Xakki\Log\Symfony\Tests\Unit;
 
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
-use Xakki\LogSymfony\ContextEnricher;
-use Xakki\LogSymfony\FileTrace;
-use Xakki\LogSymfony\Logger\EnrichingLogger;
-use Xakki\LogSymfony\LoggerConfig;
-use Xakki\LogSymfony\Processor\ContextEnrichProcessor;
-use Xakki\LogSymfony\Redactor;
-use Xakki\LogSymfony\RequestId;
+use Xakki\Log\Symfony\ContextEnricher;
+use Xakki\Log\Symfony\FileTrace;
+use Xakki\Log\Symfony\Logger\EnrichingLogger;
+use Xakki\Log\Symfony\LoggerConfig;
+use Xakki\Log\Symfony\Processor\ContextEnrichProcessor;
+use Xakki\Log\Symfony\Redactor;
+use Xakki\Log\Symfony\RequestId;
 
 /**
- * The deliverable that proves the port actually works (see project CLAUDE.md /
+ * The deliverable that proves the port actually works (see project AGENTS.md /
  * .claude/kanban port task): in LaraLog, `file`/`trace` are resolved ONE frame from the
  * caller, inside `LogManager::info()` itself. Here the enrichment runs inside a Monolog
  * Processor, deep in `Monolog\Logger`'s handler chain — the top frames of any raw

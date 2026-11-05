@@ -30,12 +30,12 @@
       "src/const.php"
     ],
     "psr-4": {
-      "Xakki\\LogSymfony\\": "src/"
+      "Xakki\\Log\\Symfony\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Xakki\\LogSymfonyTests\\": "tests/"
+      "Xakki\\Log\\Symfony\\Tests\\": "tests/"
     }
   },
   "config": {

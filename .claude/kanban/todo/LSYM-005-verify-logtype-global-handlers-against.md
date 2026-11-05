@@ -6,7 +6,7 @@
 - tech-debt
 
 **Description:**
-`Xakki\LogSymfony\LogType::installHandlers()` chains `set_error_handler` /
+`Xakki\Log\Symfony\LogType::installHandlers()` chains `set_error_handler` /
 `set_exception_handler` / `register_shutdown_function` on top of whatever the framework
 already registered, so a record can be classified `trigger` / `exception` / `fatal` rather
 than plain `logger`. It is ported and opt-in (`captureHandlers`, default false), but its

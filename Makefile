@@ -6,6 +6,10 @@ export
 
 .DEFAULT_GOAL := help
 
+# Own images go to the shared Harbor project `library` (public); `make harbor-pub` pushes them.
+HARBOR_REGISTRY ?= harbor.xakki.ru
+HARBOR_PROJECT  ?= library
+
 HOST_NAME := $(shell hostname)
 HOST_IP  := $(shell hostname -I 2>/dev/null | awk '{print $$1}' || echo unknown)
 TTY ?= $(shell if [ -t 0 ]; then echo "-it"; else echo "-i"; fi)
@@ -32,6 +36,10 @@ docker-login: ## Login to docker registry
 
 docker-push: ## Push built image to registry
 	docker push ${DOCKER_USER}/${TAG}
+
+harbor-pub: docker-build ## Build and push the image to Harbor (needs docker login)
+	docker tag ${DOCKER_USER}/${TAG} $(HARBOR_REGISTRY)/$(HARBOR_PROJECT)/${TAG}
+	docker push $(HARBOR_REGISTRY)/$(HARBOR_PROJECT)/${TAG}
 
 docker-build: ## Pull base img and build project img
 	docker pull ${PHP_IMAGE}
@@ -69,4 +77,4 @@ test: ## Run cs-check + phpstan + phpunit
 	$(composer) phpstan
 	$(composer) phpunit
 
-.PHONY: help run fix-perms docker-login docker-push docker-build bash composer-i composer-u cs-fix cs-check phpstan phpunit phpunit-filter test
+.PHONY: help run fix-perms docker-login docker-push harbor-pub docker-build bash composer-i composer-u cs-fix cs-check phpstan phpunit phpunit-filter test

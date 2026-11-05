@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace Xakki\LogSymfonyTests\Unit;
+namespace Xakki\Log\Symfony\Tests\Unit;
 
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
-use Xakki\LogSymfony\ContextEnricher;
-use Xakki\LogSymfony\FileTrace;
-use Xakki\LogSymfony\LoggerConfig;
-use Xakki\LogSymfony\Processor\ContextEnrichProcessor;
-use Xakki\LogSymfony\Redactor;
-use Xakki\LogSymfony\RequestId;
+use Xakki\Log\Symfony\ContextEnricher;
+use Xakki\Log\Symfony\FileTrace;
+use Xakki\Log\Symfony\LoggerConfig;
+use Xakki\Log\Symfony\Processor\ContextEnrichProcessor;
+use Xakki\Log\Symfony\Redactor;
+use Xakki\Log\Symfony\RequestId;
 
 /**
  * FIX 4c regression test. `FileTrace.php:76-82` (`getRelativeFilePath()`'s `$projectDir`

@@ -20,7 +20,7 @@ Low — the Redis channel is an optional transport; stdout/stderr and syslog-UDP
 main path. Filed so the feature is not silently lost.
 
 **Recommendation:**
-- A plain factory service `Xakki\LogSymfony\Handler\RedisHandlerFactory` returning a
+- A plain factory service `Xakki\Log\Symfony\Handler\RedisHandlerFactory` returning a
   configured `Monolog\Handler\RedisHandler`, referenced from `monolog.yaml` as a
   `type: service` handler.
 - Take a `\Redis`/`Predis\Client` instance by constructor injection — do NOT depend on

@@ -30,7 +30,7 @@ The principles below are language-agnostic. PHP specifics live in callout blocks
 3. **Mind cardinality.** Anything that changes every request (`request_id`, `user_id`, `order_id`) is gold as a field, poison as an index label. See §5.5.
 4. **Log once, at the boundary.** A failure is logged once, where the full context is available. Catch-log-rethrow at every level multiplies noise without new information.
 5. **Stability is a sprint tax.** Logging is part of tech debt and needs ongoing time: CI ratchet, scheduled review, removal of what nobody reads, tuning alerts and dashboards.
-6. **Logging must not break the request.** If Graylog is down or Redis is full, the request still succeeds. Logging is best-effort.
+6. **Logging must not break the request.** If Graylog is down or Redis is full, the request still succeeds. Logging is best-effort. For operational logs, a bounded local buffer may evict the oldest records when full; expose dropped-record and buffer-capacity signals. This is not a guarantee of delivery. Audit requirements remain separate (§6.5).
 
 ---
 
@@ -48,6 +48,8 @@ Non-negotiable. A violation is a security incident, not a style question.
 | Medical data                           | Diagnoses, prescriptions, biometrics           | HIPAA                        |
 | Full PII without need                  | Email + phone + address together               | GDPR data minimization       |
 | Raw endpoint bodies with any of above  | `POST /login`, `POST /payment`                 | All of the above             |
+
+**Project exception for query and Referer:** A project may explicitly choose to retain full query strings and Referer values without scanning them for secrets. The project must prohibit placing credentials or other sensitive data in those fields and accept the residual risk. This exception does not authorize logging authorization-header tokens or session cookies and does not change the remaining restrictions in this section.
 
 **Redact at the process boundary, not in storage.** If a value is sensitive, it should not be in the stream. Safe placeholders: `***`, `[redacted]`, `sha256:<first-8-chars>` if you need to trace without disclosure.
 
@@ -228,7 +230,7 @@ Populated by application code or auto-injected via MDC/scope. Changes per reques
 |------------------------------|----------------|--------------------------------------------------------------------------------------------|
 | `log_type`                   | string         | who initiated the log; see §4.3.1 (lives in `context`, not top-level, for Monolog compat)  |
 | `request_id`                 | UUID v4        | from `X-Request-ID` or generated; carried across queues and outgoing calls. Pinned to string by the library — see §4.5 |
-| `request_url`                | string         | path (without query string or with redacted query)                                         |
+| `request_url`                | string         | path without query or with redacted query; full query only under the explicit project exception in §2 |
 | `request_method`             | string         | `GET`/`POST`/...                                                                           |
 | `request_host`               | string         | `Host` header                                                                              |
 | `request_user_agent`         | string         | `User-Agent`                                                                               |

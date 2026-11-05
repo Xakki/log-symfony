@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Xakki\LogSymfony\Processor;
+namespace Xakki\Log\Symfony\Processor;
 
 use Monolog\LogRecord;
 use Monolog\Processor\ProcessorInterface;

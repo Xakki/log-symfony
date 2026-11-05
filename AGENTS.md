@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -8,8 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 type-corrects and redacts log context before it reaches a handler. Its core (`ContextEnricher`,
 `Logger\EnrichingLogger`) is Monolog-free; Monolog 3 is needed only for the processor/formatter
 path (`Processor\ContextEnrichProcessor` and friends, `Formatters\*`) — see skill
-`.claude/skills/log-pipeline/`, §0. It is the Symfony-side sibling of `xakki/laralog`
-(checkout: `/home/xakki/log-laravel`), which targets Laravel; both feed the same
+`.claude/skills/log-pipeline/`, §0. It is the Symfony-side sibling of `xakki/log-laravel`
+(checkout: `/home/xakki/libs/log-laravel`), which targets Laravel; both feed the same
 Graylog/OpenSearch field schema.
 
 Architecture (the log pipeline, class map, the shared field-name contract) — skill
@@ -34,7 +34,7 @@ into every session). Gates before finishing: `make test` (cs-check + phpstan + p
   constructible with plain `new`. No `config()`, `env()`, `getenv()` or container lookups
   anywhere in `src/` — the host app builds a `LoggerConfig` once.
 - **`src/const.php` is a cross-repo contract.** The constant *string values* are shared
-  byte-for-byte with `xakki/phperrorcatcher` and a Python port, and are the field names
+  byte-for-byte with `xakki/log-php` and a Python port, and are the field names
   landing in OpenSearch. Never rename one or change a value to "clean it up";
   `LOGGER_VER` marks the *schema* version, not this package's version.
   Same for the rule tables in `docs/ContextFieldNaming*.md` — shared word-for-word.
@@ -48,7 +48,7 @@ into every session). Gates before finishing: `make test` (cs-check + phpstan + p
 
 ## Porting from log-laravel
 
-When porting anything further from `/home/xakki/log-laravel`, read it but never modify it.
+When porting anything further from `/home/xakki/libs/log-laravel`, read it but never modify it.
 The Laravel-only extension points that have **no** Symfony equivalent and need a redesign
 rather than a copy: the `logging.php` `tap` array, the `'driver' => 'custom', 'via' =>`
 handler factory contract, `DB::listen()`, and `Queue::popUsing()`. Open follow-ups —

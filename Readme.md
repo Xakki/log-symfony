@@ -5,17 +5,19 @@ Structured production logging — a redactor and context-enrichment core (`Conte
 two ways to wire it in, plus Monolog formatters. **Not** a Symfony bundle: wire it yourself (see
 [Wiring](#wiring) below).
 
+PHP namespace: `Xakki\Log\Symfony` (formerly `Xakki\LogSymfony`). Composer: `xakki/log-symfony`.
+
 # Two integration paths
 
 | Path | Class | Needs |
 |---|---|---|
 | **A — Monolog processor** (the primary integration point) | `Processor\ContextEnrichProcessor` (+ `ExtraProcessor`, `RemoteIpProcessor`, `Formatters\*`) | `monolog/monolog: ^3.0`. Tag it `monolog.processor` via `config/packages/monolog.yaml` / `symfony/monolog-bundle`. |
-| **B — PSR-3 decorator** (optional) | `Logger\EnrichingLogger` | `psr/log` only. Wraps ANY `Psr\Log\LoggerInterface` — works with `xakki/fluent-log`, a bare `Psr\Log\NullLogger`, or Monolog; no Monolog install required. |
+| **B — PSR-3 decorator** (optional) | `Logger\EnrichingLogger` | `psr/log` only. Wraps ANY `Psr\Log\LoggerInterface` — works with `xakki/log-fluent`, a bare `Psr\Log\NullLogger`, or Monolog; no Monolog install required. |
 
 Both paths share the same enrichment logic (`ContextEnricher`), which is itself PSR-3-only and
 carries no Monolog dependency — see [Requires](#requires). Pick A for blanket, config-driven
 coverage of every Monolog handler/channel; pick B for a Monolog-free app (e.g. one logging
-through `xakki/fluent-log`) or when one call site needs precise `file`/`trace`.
+through `xakki/log-fluent`) or when one call site needs precise `file`/`trace`.
 
 # Documentation
 
@@ -86,8 +88,8 @@ parameters:
     log_symfony.redact: ['x_internal_token']
 
 services:
-    Xakki\LogSymfony\LoggerConfig:
-        factory: [Xakki\LogSymfony\LoggerConfig::class, 'fromArray']
+    Xakki\Log\Symfony\LoggerConfig:
+        factory: [Xakki\Log\Symfony\LoggerConfig::class, 'fromArray']
         arguments:
             -   messageLimit: 3024
                 allowMemory: false
@@ -95,7 +97,7 @@ services:
                     app_name: '%env(APP_NAME)%'
                     app_env: '%env(APP_ENV)%'
                     app_ver: '%env(default::APP_VERSION)%'
-                    log_ver: !php/const Xakki\LogSymfony\LOGGER_VER
+                    log_ver: !php/const Xakki\Log\Symfony\LOGGER_VER
                     tier: '%env(default::APP_TIER)%'
                     release_tag: '%env(default::RELEASE_TAG)%'
                 traceExcludedPartials: ['Monolog/', 'xakki/log-symfony/', 'vendor/']
@@ -105,45 +107,45 @@ services:
                 snakeCase: false
                 captureHandlers: false
 
-    Xakki\LogSymfony\Redactor:
+    Xakki\Log\Symfony\Redactor:
         arguments:
             $extraNeedles: '%log_symfony.redact%'
 
-    Xakki\LogSymfony\FileTrace:
+    Xakki\Log\Symfony\FileTrace:
         arguments:
             $projectDir: '%kernel.project_dir%'
 
-    Xakki\LogSymfony\RequestId: ~
+    Xakki\Log\Symfony\RequestId: ~
 
     # Autowires LoggerConfig/Redactor/FileTrace/RequestId from the services above — the
     # collaborator shared by the processor and (if you also use it) EnrichingLogger.
-    Xakki\LogSymfony\ContextEnricher: ~
+    Xakki\Log\Symfony\ContextEnricher: ~
 
-    Xakki\LogSymfony\Processor\ContextEnrichProcessor:
+    Xakki\Log\Symfony\Processor\ContextEnrichProcessor:
         tags:
             - { name: monolog.processor }
 
-    Xakki\LogSymfony\Processor\ExtraProcessor:
+    Xakki\Log\Symfony\Processor\ExtraProcessor:
         tags:
             - { name: monolog.processor }
 
-    Xakki\LogSymfony\Processor\RemoteIpProcessor:
+    Xakki\Log\Symfony\Processor\RemoteIpProcessor:
         arguments:
             $trustForwardedFor: false  # true only behind a reverse proxy that sets/strips X-Forwarded-For itself
         tags:
             - { name: monolog.processor }
 
-    Xakki\LogSymfony\Formatters\CustomFormatter:
+    Xakki\Log\Symfony\Formatters\CustomFormatter:
         arguments:
             $dateFormat: 'Y-m-d\TH:i:s.uP'
             $logSize: 1400
 
-    Xakki\LogSymfony\Formatters\ConsoleFormatter: ~
+    Xakki\Log\Symfony\Formatters\ConsoleFormatter: ~
 
     # Optional: the PSR-3 decorator (see "What you get" — accurate call-site file/trace,
     # one frame from the real caller). Decorates Symfony's default `logger` service; drop
     # this block if ContextEnrichProcessor alone is enough for your app.
-    Xakki\LogSymfony\Logger\EnrichingLogger:
+    Xakki\Log\Symfony\Logger\EnrichingLogger:
         decorates: 'logger'
         arguments:
             $inner: '@.inner'
@@ -159,12 +161,12 @@ monolog:
             type: stream
             path: "php://stderr"
             level: info
-            formatter: Xakki\LogSymfony\Formatters\CustomFormatter
+            formatter: Xakki\Log\Symfony\Formatters\CustomFormatter
         console:
             type: stream
             path: "php://stdout"
             level: debug
-            formatter: Xakki\LogSymfony\Formatters\ConsoleFormatter
+            formatter: Xakki\Log\Symfony\Formatters\ConsoleFormatter
             channels: ['!event']
 ```
 
@@ -177,9 +179,9 @@ if you only want a processor on one of them.
 # Configuration
 
 There is no `config/logger.php` here (this is not a Laravel-style app-config file) —
-`Xakki\LogSymfony\LoggerConfig` is a typed, immutable value object; the keys below are its
+`Xakki\Log\Symfony\LoggerConfig` is a typed, immutable value object; the keys below are its
 constructor-promoted properties (build one via `LoggerConfig::fromArray()`, as in
-[Wiring](#wiring), or `new LoggerConfig(...)` directly). Same semantics as the LaraLog
+[Wiring](#wiring), or `new LoggerConfig(...)` directly). Same semantics as the log-laravel
 reference implementation, renamed from Laravel's `snake_case` config keys to PHP `camelCase`
 property names:
 
@@ -188,13 +190,13 @@ property names:
 | `messageLimit`             | `3024`                                                                  | max message length kept                                                                                                                      |
 | `allowMemory`              | `false`                                                                 | attach `memory_usage` / `memory_peak`                                                                                                        |
 | `extra`                    | `[]`  — set `app_name`/`app_env`/`app_ver`/`log_ver`/`tier`/`release_*` yourself, as in the wiring example above | stable per-process fields (§4.2); `ExtraProcessor` copies this whole array onto every record (empty values dropped). Add your own keys here. |
-| `traceExcludedPartials`    | `['Monolog/', 'xakki/log-symfony/', 'vendor/']` — verified empirically against a real Monolog call chain (see `tests/Unit/StackDepthTest.php`); LaraLog's `Illuminate/Log/` entry has no Symfony equivalent to swap in — Symfony ships no bundled log-manager layer of its own to exclude | frames stripped from `file`/`trace`                                                          |
+| `traceExcludedPartials`    | `['Monolog/', 'xakki/log-symfony/', 'vendor/']` — verified empirically against a real Monolog call chain (see `tests/Unit/StackDepthTest.php`); log-laravel's `Illuminate/Log/` entry has no Symfony equivalent to swap in — Symfony ships no bundled log-manager layer of its own to exclude | frames stripped from `file`/`trace`                                                          |
 | `traceDepth`               | `['warning' => 5, 'error' => 10, 'critical' => 20]`                    | stack-trace frames by level (§3.7)                                                                                                           |
 | `traceArgLimit`            | `128`                                                                   | max chars per stringified trace arg                                                                                                          |
 | `redact`                   | `[]`                                                                    | extra secret needles, **merged** with the built-in denylist (§2), passed into `Redactor`'s constructor                                       |
 | `snakeCase`                | `false`                                                                 | lowercase + snake_case context keys (§4.7); **breaking — opt-in**                                                                            |
 | `contextTypeRules`         | `[]`, overlaid on `ContextEnricher::$contextTypeRules` (the built-in table, §4.5) for THIS instance only — never written back to the shared table, so it can't leak into another `ContextEnricher` built with a different `LoggerConfig` | project-level type-coercion rules (see [ContextFieldNaming.md](./docs/ContextFieldNaming.md) §5)                                   |
-| `captureHandlers`          | `false`                                                                 | if `true`, call `Xakki\LogSymfony\LogType::installHandlers()` yourself at bootstrap (chained error/exception/shutdown handlers, §4.3.1) — this library never calls it for you |
+| `captureHandlers`          | `false`                                                                 | if `true`, call `Xakki\Log\Symfony\LogType::installHandlers()` yourself at bootstrap (chained error/exception/shutdown handlers, §4.3.1) — this library never calls it for you |
 
 > **`captureHandlers`** is a plain flag on `LoggerConfig`; installing the actual global PHP
 > handlers is a separate explicit call — `LogType::installHandlers()` — because doing it as a
@@ -205,19 +207,28 @@ property names:
 
 # Not yet ported
 
-The following LaraLog features are documented as the reference implementation in
+The following log-laravel features are documented as the reference implementation in
 [docs/LoggingRules.md](./docs/LoggingRules.md) but are **not** part of this library yet — planned:
 
 * **SQL query logging** — a slow-query channel with safe binding redaction, via a
-  `doctrine/dbal` middleware (LaraLog: `SqlLogServiceProvider`).
+  `doctrine/dbal` middleware (log-laravel: `SqlLogServiceProvider`).
 * **Messenger heartbeat** — worker heartbeat as a log line, plus a per-message `request_id`
-  reset, via a `symfony/messenger` event subscriber (LaraLog: `QueueHeartBeat`).
+  reset, via a `symfony/messenger` event subscriber (log-laravel: `QueueHeartBeat`).
 * **Redis handler** — a capped Redis-backed Monolog handler for async/buffered log writes
-  (LaraLog: `RedisLogger`).
-* **Laravel `tap` replacements** — LaraLog exposes a few Laravel `tap`-style channel
+  (log-laravel: `RedisLogger`).
+* **Laravel `tap` replacements** — log-laravel exposes a few Laravel `tap`-style channel
   customization helpers in its config; no Symfony equivalent is planned yet, use Monolog's
   own handler/processor composition instead.
 
 # See also
 
 * [Logging Rules — full spec](./docs/LoggingRules.md) ([RU](./docs/LoggingRules.ru.md))
+
+# Related projects
+
+Sibling logging libraries sharing one field contract ([Logging Rules](https://github.com/Xakki/log-laravel/blob/main/docs/LoggingRules.md)):
+
+* [log-laravel](https://github.com/Xakki/log-laravel) — `xakki/log-laravel`. Laravel / Monolog: custom `LogManager`, processors, redaction, SQL and queue logging.
+* [log-php](https://github.com/Xakki/log-php) — `xakki/log-php`. Plain PHP (no framework, PSR-3; PHP 5.6+ on branch `master56`): error/exception catcher with pluggable storages.
+* [log-python](https://github.com/Xakki/log-python) — `xakki-log-python` (PyPI). Python: structured JSON logging with the same field/type contract.
+* [log-fluent](https://github.com/Xakki/log-fluent) — `xakki/log-fluent`. Fluent Bit config bundle that ships these logs to Graylog (GELF) and Prometheus.

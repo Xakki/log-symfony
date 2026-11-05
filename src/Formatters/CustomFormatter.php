@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Xakki\LogSymfony\Formatters;
+namespace Xakki\Log\Symfony\Formatters;
 
 use Monolog\Formatter\NormalizerFormatter;
 use Monolog\LogRecord;

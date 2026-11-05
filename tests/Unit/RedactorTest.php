@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Xakki\LogSymfonyTests\Unit;
+namespace Xakki\Log\Symfony\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Xakki\LogSymfony\Redactor;
+use Xakki\Log\Symfony\Redactor;
 
 class RedactorTest extends TestCase
 {

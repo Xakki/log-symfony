@@ -21,11 +21,11 @@ Two distinct losses, the second is the dangerous one:
 1. No heartbeat — a silently wedged worker looks identical to an idle one in Graylog.
 2. **`request_id` leaks across messages** — every record a long-lived worker emits keeps the
    id of whichever message happened to run first, so correlation in OpenSearch silently
-   attributes unrelated work to one request. `Xakki\LogSymfony\RequestId::reset()` already
+   attributes unrelated work to one request. `Xakki\Log\Symfony\RequestId::reset()` already
    exists for exactly this hook and is currently called by nothing.
 
 **Recommendation:**
-- `Xakki\LogSymfony\Messenger\LoggingWorkerSubscriber` — `reset()` on
+- `Xakki\Log\Symfony\Messenger\LoggingWorkerSubscriber` — `reset()` on
   `WorkerMessageReceivedEvent`, heartbeat on `WorkerRunningEvent` throttled by an interval
   from `LoggerConfig`, stop line on `WorkerStoppedEvent`.
 - `symfony/messenger` → `require-dev` + `suggest` only.

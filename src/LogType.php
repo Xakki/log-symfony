@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Xakki\LogSymfony;
+namespace Xakki\Log\Symfony;
 
 /**
  * Classifies who initiated a log (spec §4.3.1, `log_type`):

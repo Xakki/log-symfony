@@ -176,7 +176,7 @@ this assertion proves nothing about frame resolution.
 ## 6. Porting further from log-laravel
 
 Reference checkout: `/home/xakki/log-laravel` — read it, never modify it (see this project's
-`CLAUDE.md`, "Porting from log-laravel"). Laravel extension points with **no** Symfony
+`AGENTS.md`, "Porting from log-laravel"). Laravel extension points with **no** Symfony
 equivalent, needing a redesign rather than a straight port:
 
 - `config/logging.php`'s `'tap' => [...]` array — a Laravel-framework post-build hook over the

@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace Xakki\LogSymfonyTests\Unit;
+namespace Xakki\Log\Symfony\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
-use Xakki\LogSymfony\ContextEnricher;
-use Xakki\LogSymfony\FileTrace;
-use Xakki\LogSymfony\Logger\EnrichingLogger;
-use Xakki\LogSymfony\LoggerConfig;
-use Xakki\LogSymfony\Redactor;
-use Xakki\LogSymfony\RequestId;
+use Xakki\Log\Symfony\ContextEnricher;
+use Xakki\Log\Symfony\FileTrace;
+use Xakki\Log\Symfony\Logger\EnrichingLogger;
+use Xakki\Log\Symfony\LoggerConfig;
+use Xakki\Log\Symfony\Redactor;
+use Xakki\Log\Symfony\RequestId;
 
 /**
  * Proves {@see EnrichingLogger} (and, through it, {@see ContextEnricher}) works over a
@@ -20,7 +20,7 @@ use Xakki\LogSymfony\RequestId;
  *
  * This is the concrete consumer scenario the change is for: `xakki/convertor` logs through
  * `xakki/fluent-log`, a plain PSR-3 logger with no Monolog installed at all — see the owner
- * decision in project CLAUDE.md ("make the core Monolog-free").
+ * decision in project AGENTS.md ("make the core Monolog-free").
  *
  * `RecordingPsr3Logger` below is a hand-written {@see AbstractLogger} test double — deliberately
  * NOT `Monolog\Logger`/`TestHandler` — so nothing in this file requires Monolog to even be

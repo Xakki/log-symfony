@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Xakki\LogSymfony;
+namespace Xakki\Log\Symfony;
 
 /**
  * Typed, immutable configuration for this library. The host application builds ONE of these

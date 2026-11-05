@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Xakki\LogSymfony;
+namespace Xakki\Log\Symfony;
 
 use Psr\Log\LogLevel;
 

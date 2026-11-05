@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Xakki\LogSymfony\Processor;
+namespace Xakki\Log\Symfony\Processor;
 
 use Monolog\LogRecord;
 use Monolog\Processor\ProcessorInterface;
-use Xakki\LogSymfony\LoggerConfig;
+use Xakki\Log\Symfony\LoggerConfig;
 
 class ExtraProcessor implements ProcessorInterface
 {

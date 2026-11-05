@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Xakki\LogSymfonyTests\Unit;
+namespace Xakki\Log\Symfony\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Xakki\LogSymfony\RequestId;
+use Xakki\Log\Symfony\RequestId;
 
 /**
  * FIX 4a regression tests. `tests/Unit/ContextEnricherTest.php::testInit()` only asserted

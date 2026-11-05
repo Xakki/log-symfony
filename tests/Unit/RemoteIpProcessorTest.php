@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Xakki\LogSymfonyTests\Unit;
+namespace Xakki\Log\Symfony\Tests\Unit;
 
 use Monolog\Level;
 use Monolog\LogRecord;
 use PHPUnit\Framework\TestCase;
-use Xakki\LogSymfony\Processor\RemoteIpProcessor;
+use Xakki\Log\Symfony\Processor\RemoteIpProcessor;
 
 /**
  * FIX 2 regression test. `remote_ip` has REQUEST lifetime (it changes between requests

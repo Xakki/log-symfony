@@ -21,11 +21,11 @@ Symfony services get no slow-query visibility in Graylog; the two packages produ
 field sets for the same OpenSearch index, so cross-service SQL dashboards break.
 
 **Recommendation:**
-- New optional namespace `Xakki\LogSymfony\Doctrine\` with a `SqlLoggingMiddleware`
+- New optional namespace `Xakki\Log\Symfony\Doctrine\` with a `SqlLoggingMiddleware`
   implementing `Doctrine\DBAL\Driver\Middleware`, wired by the host app in
   `doctrine.dbal.middlewares`.
 - `doctrine/dbal` goes to `require-dev` + `suggest`, never `require` — this package stays a pure
-  Monolog library (see CLAUDE.md).
+  Monolog library (see AGENTS.md).
 - The regex-based SQL type/table classification in the Laravel source is DB-layer-agnostic:
   port it verbatim so `sql_type`/`table` values match byte-for-byte across both packages.
 - Thresholds (`sqlSlowLogAll`, `sqlSlowLogForSelect`) move into the typed `LoggerConfig`

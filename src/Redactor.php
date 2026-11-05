@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Xakki\LogSymfony;
+namespace Xakki\Log\Symfony;
 
 /**
  * Credential / secret redaction at the process boundary (spec §2 / §2.1).
@@ -15,7 +15,7 @@ namespace Xakki\LogSymfony;
  * Built-in needles are ALWAYS on; extra needles are supplied via the constructor (host app
  * reads them from its own config once and passes them in — this library never calls config()).
  *
- * Known, accepted limitation (verified identical in the Python port, pylog's
+ * Known, accepted limitation (verified identical in the Python port, log_python's
  * `redactor.py`): needle matching is a case-insensitive substring match via
  * `mb_strtolower()` + `str_contains()`. A needle can be defeated by a Unicode
  * homoglyph or a zero-width character spliced inside it — e.g. a Turkish dotted
@@ -84,7 +84,7 @@ final class Redactor
         }
         // URL-embedded credentials: scheme://user:password@host — mask ONLY the password,
         // scheme/user/host stay intact (diagnostically useful, not secret). Kept in sync
-        // with pylog's `_URL_CREDENTIALS_RE`.
+        // with log_python's `_URL_CREDENTIALS_RE`.
         $value = (string) preg_replace(
             '~([A-Za-z][A-Za-z0-9+.-]*://)([^:/?#\s@]+):([^@/?#\s]+)@~',
             '$1$2:' . self::MASK . '@',
@@ -96,7 +96,7 @@ final class Redactor
         // closing quote — as a single unit, so no dangling quote is ever left behind
         // (previously `secret=...` matched inside `{"password": "hunter2"}` never fired,
         // because the closing `"` sat between the needle and the `:`). Kept in sync with
-        // pylog's `_kv_sub_re`. preg_replace() is a no-op when nothing matches, so a single
+        // log_python's `_kv_sub_re`. preg_replace() is a no-op when nothing matches, so a single
         // call covers the old match-then-replace two-step.
         // BUILTIN is never empty, so $needles is always a non-empty alternation here.
         $needles = implode('|', array_map('preg_quote', $this->needles));

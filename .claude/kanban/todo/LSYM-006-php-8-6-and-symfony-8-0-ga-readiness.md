@@ -29,7 +29,7 @@ failure mode is a deprecation or a behaviour change surfacing in production rath
 On each GA, in one change:
 1. **PHP 8.6** — promote the canary out of `continue-on-error` in
    `.github/workflows/autotest.yml` (drop the `include:` entry, add `'8.6'` to the matrix
-   list), run `make test PHP_IMAGE=php:8.6-cli-alpine TAG=logsymfony-php:8.6` locally, and move
+   list), run `make test PHP_IMAGE=harbor.xakki.ru/external/php:8.6-cli-alpine TAG=logsymfony-php:8.6` locally, and move
    8.6 from the "tracked" to the "verified" line in `Readme.md`. Do NOT widen the `php`
    constraint — `^8.4` already covers it; widening it to `^8.4|^8.6` would be noise.
    ⚠ Read the phpunit SUMMARY COUNT line, not a `tail` slice — a truncated view of a failing

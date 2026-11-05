@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Xakki\LogSymfony;
+namespace Xakki\Log\Symfony;
 
 /**
  * Per-request/per-message correlation id (spec §4.4). Instance-scoped (unlike LaraLog's

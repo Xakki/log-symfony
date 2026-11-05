@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Xakki\LogSymfony;
+namespace Xakki\Log\Symfony;
 
 /**
  * Call-site file/line resolution and stack-trace rendering (spec §3.7 / §4.6). Ported from

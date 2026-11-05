@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Xakki\LogSymfony\Logger;
+namespace Xakki\Log\Symfony\Logger;
 
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LoggerTrait;
 use Psr\Log\LogLevel;
-use Xakki\LogSymfony\ContextEnricher;
+use Xakki\Log\Symfony\ContextEnricher;
 
 /**
  * Optional PSR-3 decorator wrapping an inner {@see LoggerInterface}. Its value over the
- * {@see \Xakki\LogSymfony\Processor\ContextEnrichProcessor} is accurate call-site `file`/
+ * {@see \Xakki\Log\Symfony\Processor\ContextEnrichProcessor} is accurate call-site `file`/
  * `trace`: it runs {@see ContextEnricher::enrich()} directly at the application's call site
  * (one frame away), before the message ever reaches Monolog's handler chain, so no
  * Monolog-internal frames have to be filtered out of the resolved trace at all.
